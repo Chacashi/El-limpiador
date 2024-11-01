@@ -9,11 +9,23 @@ public class playerController : MonoBehaviour
     [SerializeField] float speed;
     float vertical;
     float horizontal;
+    [SerializeField] float xMin, xMax, yMin, yMax;
+    [SerializeField] float currentX, currentY;
+   
 
 
     private void Awake()
     {
         _compRigidbody2D = GetComponent<Rigidbody2D>();
+    }
+
+    
+
+    private void Update()
+    {
+        currentX = Mathf.Clamp(transform.position.x, xMin, xMax);
+        currentY = Mathf.Clamp(transform.position.y, yMin, yMax);
+        transform.position = new Vector2(currentX, currentY);
     }
 
     public void AxisY(InputAction.CallbackContext context)
