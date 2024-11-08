@@ -14,6 +14,7 @@ public class GraphMapController : MonoBehaviour
     [SerializeField] GameObject NodePrefab;
     DoubleCircleList<NodeControll> ListNodes = new DoubleCircleList<NodeControll>();
     [SerializeField] EnemyController[] arrayEnemys;
+    
 
     //soy bajito
     private void Start()

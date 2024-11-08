@@ -13,8 +13,20 @@ public class playerController : MonoBehaviour
     [SerializeField] float currentX, currentY;
    public static event Action OnYellEnemy1;
    public static event Action OnYellEnemy2;
+    public static event Action OnDestroyTrush;
+    SimpleLinkList<GameObject> ListTrush = new SimpleLinkList<GameObject>();
+    [SerializeField] int MaxnumberGetTrush;
+    [SerializeField] float timeDurationDialogue;
+    int currentNumberGetTrush;
+    GameObject[] lastTrushGet;
+    [SerializeField] GameObject[] lastTrushGetUI;
+   
 
+
+    
     bool isYell;
+    bool isTakeTrush;
+    bool pressX;
 
 
     private void Awake()
@@ -22,7 +34,12 @@ public class playerController : MonoBehaviour
         _compRigidbody2D = GetComponent<Rigidbody2D>();
     }
 
-    
+    private void Start()
+    {
+        lastTrushGet = new GameObject[MaxnumberGetTrush];
+        
+    }
+
 
     private void Update()
     {
@@ -43,12 +60,12 @@ public class playerController : MonoBehaviour
 
     public void ButtonZ (InputAction.CallbackContext context) 
     {
-       
+        isTakeTrush = context.performed;
     }
 
     public void ButtonX(InputAction.CallbackContext context)
     {
-
+        pressX = context.performed;
     }
 
     public void ButtonC(InputAction.CallbackContext context)
@@ -68,14 +85,62 @@ public class playerController : MonoBehaviour
         if(collision != null && collision.gameObject.tag == "Enemy1" && isYell==true)
         {
             OnYellEnemy1?.Invoke();
+            StartCoroutine( Dialogue());
+            
             isYell=false;
         }
         if (collision != null && collision.gameObject.tag == "Enemy2" && isYell == true)
         {
             OnYellEnemy2?.Invoke();
+            StartCoroutine(Dialogue());
             isYell = false;
         }
+
+        if (collision != null && collision.gameObject.tag == "trush" && isTakeTrush == true)
+        {
+        
+            isTakeTrush=false;
+            if(currentNumberGetTrush<MaxnumberGetTrush)
+            {
+                lastTrushGet[currentNumberGetTrush] = collision.gameObject;
+                lastTrushGetUI[currentNumberGetTrush].gameObject.SetActive(true);
+                currentNumberGetTrush++;
+                ListTrush.AddAtStart(collision.gameObject);
+                
+                collision.gameObject.SetActive(false);
+            }
+            
+        }
+
+
+        if (collision != null && collision.gameObject.tag == "trashCan" && pressX == true)
+        {
+
+            if (currentNumberGetTrush > 0)
+            {
+                ListTrush.DeleteAtStart();
+                Destroy(lastTrushGet[currentNumberGetTrush - 1]);
+                lastTrushGetUI[currentNumberGetTrush-1].gameObject.SetActive(false);
+                currentNumberGetTrush--;
+                OnDestroyTrush?.Invoke();
+            }
+
+
+
+        }
+
+
+        IEnumerator Dialogue()
+        {
+            transform.GetChild(0).gameObject.SetActive(true);
+            yield return new WaitForSeconds(timeDurationDialogue);
+            transform.GetChild(0).gameObject.SetActive(false);
+        }
+
     }
 
 
+
+
+  
 }

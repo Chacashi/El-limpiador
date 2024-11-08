@@ -5,7 +5,7 @@ using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 public class ButtonScene : MonoBehaviour
 {
-    [SerializeField] Button myButton;
+     Button myButton;
     [SerializeField] string newScene;
     
 
@@ -22,6 +22,7 @@ public class ButtonScene : MonoBehaviour
     void ChangueScene()
     {
         SceneManager.LoadScene(newScene);
+        Time.timeScale = 1.0f;
     }
 
    

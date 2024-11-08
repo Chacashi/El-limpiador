@@ -15,6 +15,7 @@ public class EnemyController : MonoBehaviour
     [SerializeField] Vector3 startPostition;
     [SerializeField] float speedMove;
     public static event Action OnTimeisOver;
+    public static event Action OnCreateTrush;
     bool isTimeZero;
     [SerializeField] GameObject trashPrefab;
     int numberMagic;
@@ -98,6 +99,7 @@ public class EnemyController : MonoBehaviour
             numberMagic = UnityEngine.Random.Range(0, 101);
             if (numberMagic<=17)
             {
+                OnCreateTrush?.Invoke();
                 Instantiate(trashPrefab, transform.position, Quaternion.identity);
             }
             SetNewPosition(collision.GetComponent<NodeControll>().GetAdjacentNode().transform.position);

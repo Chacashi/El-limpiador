@@ -24,10 +24,12 @@ public class ButtonUI : MonoBehaviour
         {
             if (objectives[i].activeSelf)
             {
+                Time.timeScale = 1.0f;
                 objectives[i].gameObject.SetActive(false);
             }
             else
             {
+                Time.timeScale = 0.0f;
                 objectives[i].gameObject.SetActive(true);
             }
         }

@@ -19,6 +19,7 @@ public class ButtonMusic : MonoBehaviour
 
     void Interactue()
     {
+        Time.timeScale = 0.0f;
         SingletonBasic.instance.Open();
     }
 }
