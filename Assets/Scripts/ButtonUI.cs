@@ -5,7 +5,7 @@ using UnityEngine.UI;
 
 public class ButtonUI : MonoBehaviour
 {
-   [SerializeField] Button myButton;
+  Button myButton;
    [SerializeField] GameObject[] objectives;
 
     private void Awake()

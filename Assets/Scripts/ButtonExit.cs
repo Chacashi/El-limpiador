@@ -4,8 +4,8 @@ using UnityEngine;
 using UnityEngine.UI;
 
 public class ButtonExit : MonoBehaviour
-{
-    [SerializeField] Button myButton;
+{   
+    Button myButton;
     private void Awake()
     {
         myButton = GetComponent<Button>();
