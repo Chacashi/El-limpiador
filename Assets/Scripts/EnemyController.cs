@@ -38,7 +38,7 @@ public class EnemyController : MonoBehaviour
             transform.position = Vector2.MoveTowards(transform.position, startPostition, speedMove * Time.deltaTime);
             if(transform.position == startPostition)
             {
-                transform.GetComponent<CircleCollider2D>().enabled = false;
+                transform.GetComponent<BoxCollider2D>().enabled = false;
                 TimeFreeze -= Time.deltaTime;
                 SetTextTimeFreeze(Mathf.FloorToInt(TimeFreeze));
             }
@@ -46,7 +46,7 @@ public class EnemyController : MonoBehaviour
         }
        if(TimeFreeze < 0)
         {
-            transform.GetComponent<CircleCollider2D>().enabled = true;
+            transform.GetComponent<BoxCollider2D>().enabled = true;
             isTimeZero = true;
             SetTextTimeFreeze(0);
             transform.position = Vector2.MoveTowards(transform.position, PositionToMove, speedMove * Time.deltaTime);
