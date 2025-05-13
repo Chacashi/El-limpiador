@@ -73,7 +73,7 @@ public class GraphMapController : MonoBehaviour
 
     private void OnEnable()
     {
-        EnemyController.OnTimeisOver += SetInitialNode;
+        EnemyController.OnTimeisOver += SetInitialNode; 
     }
 
     private void OnDisable()

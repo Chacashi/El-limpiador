@@ -11,8 +11,8 @@ public class playerController : MonoBehaviour
     float horizontal;
     [SerializeField] float xMin, xMax, yMin, yMax;
     [SerializeField] float currentX, currentY;
-   public static event Action OnYellEnemy1;
-   public static event Action OnYellEnemy2;
+    public static event Action OnYellEnemy1;
+    public static event Action OnYellEnemy2;
     public static event Action OnDestroyTrush;
     SimpleLinkList<GameObject> ListTrush = new SimpleLinkList<GameObject>();
     [SerializeField] int MaxnumberGetTrush;
@@ -20,13 +20,15 @@ public class playerController : MonoBehaviour
     int currentNumberGetTrush;
     GameObject[] lastTrushGet;
     [SerializeField] GameObject[] lastTrushGetUI;
-   
 
 
-    
+
+
     bool isYell;
     bool isTakeTrush;
-    bool pressX;
+    bool pressX = false;
+    bool takeCan = false;
+
 
 
     private void Awake()
@@ -46,6 +48,20 @@ public class playerController : MonoBehaviour
         currentX = Mathf.Clamp(transform.position.x, xMin, xMax);
         currentY = Mathf.Clamp(transform.position.y, yMin, yMax);
         transform.position = new Vector2(currentX, currentY);
+
+        if (takeCan && pressX)
+        {    
+                if (currentNumberGetTrush > 0)
+                {
+                    ListTrush.DeleteAtStart();
+                    Destroy(lastTrushGet[currentNumberGetTrush - 1]);
+                    lastTrushGetUI[currentNumberGetTrush - 1].gameObject.SetActive(false);
+                    currentNumberGetTrush--;
+                    OnDestroyTrush?.Invoke();
+                }
+                pressX = false;    
+        }
+       
     }
 
     public void AxisY(InputAction.CallbackContext context)
@@ -65,7 +81,15 @@ public class playerController : MonoBehaviour
 
     public void ButtonX(InputAction.CallbackContext context)
     {
-        pressX = context.performed;
+        if(context.phase == InputActionPhase.Performed)
+        {
+            pressX = true;
+        }
+        else
+        {
+            pressX = false;
+        }
+        
     }
 
     public void ButtonC(InputAction.CallbackContext context)
@@ -73,7 +97,7 @@ public class playerController : MonoBehaviour
         isYell = context.performed;
     }
 
-
+    
     private void FixedUpdate()
     {
         _compRigidbody2D.velocity = new Vector2(speed * horizontal, speed * vertical);
@@ -111,25 +135,6 @@ public class playerController : MonoBehaviour
             }
             
         }
-
-
-        if (collision != null && collision.gameObject.tag == "trashCan" && pressX == true)
-        {
-
-            if (currentNumberGetTrush > 0)
-            {
-                ListTrush.DeleteAtStart();
-                Destroy(lastTrushGet[currentNumberGetTrush - 1]);
-                lastTrushGetUI[currentNumberGetTrush-1].gameObject.SetActive(false);
-                currentNumberGetTrush--;
-                OnDestroyTrush?.Invoke();
-            }
-
-
-
-        }
-
-
         IEnumerator Dialogue()
         {
             transform.GetChild(0).gameObject.SetActive(true);
@@ -139,8 +144,25 @@ public class playerController : MonoBehaviour
 
     }
 
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        if ( collision.gameObject.tag == "trashCan")
+        {
+            takeCan = true;
+        }
+    }
 
-
-
-  
+    private void OnTriggerExit2D(Collider2D collision)
+    {
+        if (collision.gameObject.tag == "trashCan")
+        {
+            takeCan = false;
+        }
+    }
 }
+
+
+
+
+
+
